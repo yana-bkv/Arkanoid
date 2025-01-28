@@ -3,12 +3,12 @@
 body {
     text-align: center;
     background-color: rgb(163, 163, 163);
-    /* color: #4f4646; */
 }
 
 h1 {
     font-family: "Jersey 15", serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 50px;
+    font-size: 60px;
+    color: #643165;
 }
