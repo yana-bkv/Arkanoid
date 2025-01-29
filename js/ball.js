@@ -1,20 +1,25 @@
-function Ball(height,width,x,y,color) {
-    this.height = height;
-    this.width = width;
+import { Puddle } from './puddle.js';
+
+function Ball(radius,x,y,color) {
+    this.radius = radius;
     this.x = x;
     this.y = y;
     this.color = color;
 
+    this.dx = 2;
+    this.dy = -2;
+
     this.draw = function(ctx) {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2, true);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
         ctx.fillStyle = this.color;
         ctx.fill();
         ctx.stroke();
     };
 }
 
-const ball = new Ball(0, 5, 350, 412, 'black');
+let gameOver = false; 
+const ball = new Ball(5, 350, 412, 'black');
 
 function DrawBall() {
     const canvas = document.getElementById('canvas');
@@ -43,10 +48,33 @@ document.addEventListener('keydown', function(event) {
      // Arrow key movement logic
     if (event.code === "Space") {
         console.log("space");
-        ball.y = Math.max(0, ball.y - 15);  // Move left, don't go off-screen
+        setInterval(moveCircle,1); 
     }
 
     clearCanvasAndRedraw();  
 });
+
+function moveCircle() {
+    if (gameOver) return; 
+    if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) {
+        ball.dx = -ball.dx;
+    }   
+    if ( ball.y + ball.dy < ball.radius) {
+        ball.dy = -ball.dy;
+    } else if (ball.y + ball.dy > canvas.height - ball.radius) {
+        if (ball.x > Puddle.pX && ball.x < Puddle.pX + Puddle.pWidth) {
+            ball.dy = -ball.dy;
+            console.log("Touched puddle");
+        } else {
+            gameOver = true; // Set flag to prevent multiple reloads
+            alert("Game Over");
+            setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
+            return;
+        }
+    }
+ 
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+}
 
 export { DrawBall };

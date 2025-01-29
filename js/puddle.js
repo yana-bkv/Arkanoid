@@ -55,4 +55,4 @@ document.addEventListener('keydown', function(event) {
     clearCanvasAndRedraw();  
 });
 
-export { DrawPuddle };
+export { Puddle, DrawPuddle };
