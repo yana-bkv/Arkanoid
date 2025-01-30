@@ -1,17 +1,32 @@
 import { Field } from './game.js';
 import { Ball,  DrawBall } from './ball.js';
 import { Puddle, DrawPuddle } from './puddle.js';
-import { DrawBricks } from './bricks.js'
+import { Brick, DrawBricks } from './bricks.js'
+
+let brickWidth = 40;  // Width of each brick
+let brickHeight = 15; // Height of each brick
+
+let padding = 10;     // Space between bricks
+let offsetTop = 30;   // Top margin
+let offsetLeft = 30;  // Left margin
+
+let x = offsetLeft + c * (brickWidth + padding);
+let y = offsetTop + r * (brickHeight + padding);
 
 let gameOver = false; 
+// Initialize all objects
 const ball = new Ball(350, 412, 5, 1, -1, 'black');
 const puddle = new Puddle(330, 420, 40, 10, "white");
+// Different level of bricks difficulty to break
+let easyBrick = new Brick(x, y, brickWidth, brickHeight, "#611717", padding, offsetTop, offsetLeft);
+let mediumBrick = new Brick(x, y, brickWidth, brickHeight, "#243a83", padding, offsetTop, offsetLeft);
+let hardBrick = new Brick(x, y, brickWidth, brickHeight, "#906c3a", padding, offsetTop, offsetLeft);
  
 function draw() {
     Field();
     DrawBall(ball);
     DrawPuddle(puddle);
-    DrawBricks();
+    DrawBricks(easyBrick,mediumBrick,hardBrick);
 }
 
 // KEY HANDLERS
@@ -77,8 +92,10 @@ function moveCircle() {
     }
  
     ball.x += ball.dx;
-    ball.y += ball.dy;
-    
+    ball.y += ball.dy;   
+}
+
+function collisionDetetcion() {
 }
 
 function loop() {
@@ -90,7 +107,12 @@ loop();
 
 
 
-// сделано движение доски, нарисован весь канвас
-// надо сделать механику соприкосновения с объектами, отскакивание от стен и ломание блоков
+// сделано движение доски, нарисован весь канвас,
+// механика мяча - отскакивает от стен и доски, при пролетании мимо доски игра окончен
+// надо сделать механику ломания блоков 
+// пофиксить баг где мяч отскакивает пролетая рядом с доской
 // добавить ХП и Счет игрока
 // возможность поставить на паузу и начать сначала
+
+// C и R надо инициализовать в этом файле
+// все переменные кирпича запихнуть в объект, добавить уровень сложности
