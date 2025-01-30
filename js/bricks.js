@@ -1,20 +1,21 @@
-function Brick(brX,brY,brWidth,brHeight,brColor) {
-    this.brX = brX;
-    this.brY = brY;
-    this.brWidth = brWidth;
-    this.brHeight = brHeight;
-    this.brColor = brColor;
+ function Brick(x,y,width,height,color) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
 
     this.draw = function(ctx) {
         ctx.beginPath();
 
-        ctx.rect(brX,brY,brWidth,brHeight);
-        ctx.fillStyle = brColor;
+        ctx.rect(x,y,width,height);
+        ctx.fillStyle = color;
         ctx.fill();
         ctx.closePath();
     }
 
 }
+
 function DrawBricks() {
     const canvas = document.getElementById("canvas");
 
