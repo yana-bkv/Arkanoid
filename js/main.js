@@ -69,11 +69,10 @@ function moveCircle() {
                     ball.dy = -ball.dy;
                     console.log("Touched puddle");
                 }
-            } else {
+            } else if (ball.y + ball.dy > canvas.height-ball.radius) {
                 gameOver = true; // Set flag to prevent multiple reloads
                 alert("Game Over");
                 setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
-                return;
             }
     }
  
