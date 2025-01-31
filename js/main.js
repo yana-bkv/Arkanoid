@@ -1,35 +1,40 @@
 import { Field } from './game.js';
 import { Ball,  DrawBall } from './ball.js';
 import { Puddle, DrawPuddle } from './puddle.js';
-import { Brick, DrawBricks } from './bricks.js'
-
-let brickWidth = 40;  // Width of each brick
-let brickHeight = 15; // Height of each brick
-
-let columns = 13;
-let rows = 3;
-
-let padding = 10;     // Space between bricks
-let offsetTop = 30;   // Top margin
-let offsetLeft = 30;  // Left margin
-
-let x = offsetLeft; // Starting x position for the first brick
-let y = offsetTop; 
+import { DrawBricks, createBricks } from './bricks.js'
 
 let gameOver = false; 
 // Initialize all objects
 const ball = new Ball(350, 412, 5, 1, -1, 'black');
 const puddle = new Puddle(330, 420, 40, 10, "white");
-// Different level of bricks difficulty to break
-const easyBrick = new Brick(x, y, brickWidth, brickHeight, "#611717", columns, rows, padding, offsetTop, offsetLeft);
-const mediumBrick = new Brick(x, y * 4, brickWidth, brickHeight, "#243a83", columns, rows, padding, offsetTop * 4, offsetLeft);
-const hardBrick = new Brick(x, y * 7, brickWidth, brickHeight, "#906c3a", columns, rows, padding, offsetTop * 7, offsetLeft);
- 
+const bricks = createBricks(13, 9, 40, 15, 10, 30, 30, "#611717");
+// const brick = new Brick(30, 30, 40, 15, "#611717", true, 13, 9, 10, 30, 30);
+
 function draw() {
     Field();
     DrawBall(ball);
     DrawPuddle(puddle);
-    DrawBricks(easyBrick,mediumBrick,hardBrick);
+    DrawBricks(bricks);
+    collisionDetection(ball, bricks);
+    // collisionDetection(ball,brick);
+}
+
+function collisionDetection(ball, bricks) {
+    bricks.forEach(brick => {
+        if (brick.visible) {
+            // Check if the ball collides with the brick
+            if (
+                ball.x + ball.radius > brick.x && // Ball's right edge > brick's left edge
+                ball.x - ball.radius < brick.x + brick.width && // Ball's left edge < brick's right edge
+                ball.y + ball.radius > brick.y && // Ball's bottom edge > brick's top edge
+                ball.y - ball.radius < brick.y + brick.height // Ball's top edge < brick's bottom edge
+            ) {
+                // Collision detected
+                brick.visible = false; // Hide the brick
+                ball.dy = -ball.dy; // Reverse the ball's vertical direction
+            }
+        }
+    });
 }
 
 // KEY HANDLERS
@@ -37,10 +42,10 @@ function draw() {
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
    if (event.code === "Space") {
-       console.log("space");
+       console.log("Space");
        setInterval(() => moveCircle(ball), 1);
    }
-
+   
    clearCanvasAndRedraw(ball);  
 });
 
@@ -50,18 +55,16 @@ document.addEventListener('keydown', function(event) {
 
     // Arrow key movement logic
     if (event.key === "ArrowLeft") {
-        console.log("Left arrow pressed");
-        puddle.x = Math.max(0, puddle.x - 15);  // Move left, don't go off-screen
+        console.log("Left arrow");
+        puddle.x = Math.max(0, puddle.x - 17);  // Move left, don't go off-screen
     }
     if (event.key === "ArrowRight") {
-        console.log("Right arrow pressed");
-        puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 15);   // Move right, don't go off-screen
+        console.log("Right arrow");
+        puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 17);   // Move right, don't go off-screen
     }
 
     clearCanvasAndRedraw(puddle);  
 });
-
-
 
 // Function to clear the canvas and redraw the puddle
 function clearCanvasAndRedraw(element) {
@@ -76,12 +79,12 @@ function clearCanvasAndRedraw(element) {
 // Мяч ударяется о стенки и об доску
 function moveCircle() {
     if (gameOver) return; 
-    if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) {
+    if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
         ball.dx = -ball.dx;
     }   
-    if ( ball.y + ball.dy < ball.radius) {
+    if ( ball.y + ball.dy < ball.radius) { // Top wall
         ball.dy = -ball.dy;
-    } else if (ball.y + ball.dy > puddle.y - ball.radius) {
+    } else if (ball.y + ball.dy > puddle.y - ball.radius) { // Bottom 
             if (ball.x + ball.radius > puddle.x && ball.x - ball.radius < puddle.x + puddle.width) {
                 if (ball.y = ball.y - puddle.height) {
                     ball.dy = -ball.dy;
@@ -94,11 +97,8 @@ function moveCircle() {
             }
     }
  
-    ball.x += ball.dx;
-    ball.y += ball.dy;   
-}
-
-function collisionDetetcion() {
+    ball.x += ball.dx/2;
+    ball.y += ball.dy/2;   
 }
 
 function loop() {
