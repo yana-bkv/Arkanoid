@@ -6,21 +6,24 @@ import { Brick, DrawBricks } from './bricks.js'
 let brickWidth = 40;  // Width of each brick
 let brickHeight = 15; // Height of each brick
 
+let columns = 13;
+let rows = 3;
+
 let padding = 10;     // Space between bricks
 let offsetTop = 30;   // Top margin
 let offsetLeft = 30;  // Left margin
 
-let x = offsetLeft + c * (brickWidth + padding);
-let y = offsetTop + r * (brickHeight + padding);
+let x = offsetLeft; // Starting x position for the first brick
+let y = offsetTop; 
 
 let gameOver = false; 
 // Initialize all objects
 const ball = new Ball(350, 412, 5, 1, -1, 'black');
 const puddle = new Puddle(330, 420, 40, 10, "white");
 // Different level of bricks difficulty to break
-let easyBrick = new Brick(x, y, brickWidth, brickHeight, "#611717", padding, offsetTop, offsetLeft);
-let mediumBrick = new Brick(x, y, brickWidth, brickHeight, "#243a83", padding, offsetTop, offsetLeft);
-let hardBrick = new Brick(x, y, brickWidth, brickHeight, "#906c3a", padding, offsetTop, offsetLeft);
+const easyBrick = new Brick(x, y, brickWidth, brickHeight, "#611717", columns, rows, padding, offsetTop, offsetLeft);
+const mediumBrick = new Brick(x, y * 4, brickWidth, brickHeight, "#243a83", columns, rows, padding, offsetTop * 4, offsetLeft);
+const hardBrick = new Brick(x, y * 7, brickWidth, brickHeight, "#906c3a", columns, rows, padding, offsetTop * 7, offsetLeft);
  
 function draw() {
     Field();

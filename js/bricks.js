@@ -1,46 +1,50 @@
- function Brick(x,y,width,height,color,paddingBetween,offsetTop,offsetLeft) {
+ function Brick(x, y, width, height, color, columns, rows, paddingBetween,offsetTop,offsetLeft) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.color = color;
 
+    this.columns = columns;
+    this.rows = rows;
+
     this.paddingBetween = paddingBetween;
     this.offsetTop = offsetTop;
     this.offsetLeft = offsetLeft;
 
-    this.columns = 13;
-    this.rows = 9;
-
     this.draw = function(ctx) {
         ctx.beginPath();
 
-        ctx.rect(x,y,width,height);
-        ctx.fillStyle = color;
+        ctx.rect(this.x,this.y,this.width,this.height);
+        ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
     }
 
 }
 
-function DrawBricks(easyBrick,mediumBrick,hardBrick) {
+function DrawBricks(easy,medium,hard) {
     const canvas = document.getElementById("canvas");
 
     if (canvas.getContext) {
         const ctx = canvas.getContext("2d");
 
-        for (let c = 0; c < easyBrick.columns; c++) {
-            for (let r = 0; r < easyBrick.rows; r++) {
-
-                if (r < 3) {
-                    easyBrick.draw(ctx);
-                } else if (r >= 3 && r < 6) {
-                    mediumBrick.draw(ctx);
-                } else if (r >= 6 && r <= 9) {
-                    hardBrick.draw(ctx);
+        function differentLevels(level) {
+            // Draw easy bricks
+            for (let c = 0; c < level.columns; c++) {
+                for (let r = 0; r < level.rows; r++) {
+                    level.x = c * (level.width + level.paddingBetween) + level.offsetLeft;
+                    level.y = r * (level.height + level.paddingBetween) + level.offsetTop;
+                
+                    level.draw(ctx);
                 }
             }
         }
+
+        differentLevels(easy);
+        differentLevels(medium);
+        differentLevels(hard);
+
     }
 }
 
