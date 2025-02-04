@@ -25,14 +25,14 @@ function draw() {
 
 function showPlayerStats(score, brokenBricks) {
     const stats = document.getElementById("stats");
-    console.log(`Your score is ${score} you have broken ${brokenBricks} bricks.`)
 
-    const hpDiv = document.createElement("p");
+    const hpDiv = document.getElementById("hp");
+    const scoreDiv = document.getElementById("score");
+    const brokenBricksDiv = document.getElementById("bricks");
     
     hpDiv.textContent = `Your have ${HP} HP left`;
-    stats.textContent = `Your score is ${score}\n you have broken ${brokenBricks} bricks.`;
-
-    stats.append(hpDiv);
+    scoreDiv.textContent = `Your score is ${score}`;
+    brokenBricksDiv.textContent = `You have broken ${brokenBricks} bricks`;
 }
 
 function collisionDetection(ball, bricks) {
@@ -106,17 +106,34 @@ function moveCircle() {
                     //console.log("Touched puddle");
                 }
             } else if (ball.y + ball.dy > canvas.height-ball.radius) {
-                if (HP == 0) {
+                if (HP == 1) {
                     alert(`Game Over. Youre score is ${playerScore}`);
                     setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
+                    gameOver = true;
                 }
-                gameOver = true; // Set flag to prevent multiple reloads
                 HP = HP - 1;
+                resetBall(ball);
             }
     }
  
     ball.x += ball.dx/2;
     ball.y += ball.dy/2;   
+}
+
+function resetBall(ball) {
+    ball.x = 350;
+    ball.y = 412;
+    ball.dy = 0;
+    ball.dx = 0;
+    document.addEventListener('keydown', function(event) {
+        // Arrow key movement logic
+       if (event.code === "Space") {
+            ball.dy = 2;
+            ball.dx = 2;;
+       }
+       
+    });
+    
 }
 
 function loop() {
