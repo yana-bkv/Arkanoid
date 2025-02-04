@@ -4,7 +4,7 @@ import { Puddle, DrawPuddle } from './puddle.js';
 import { DrawBricks, createBricks } from './bricks.js'
 
 let gameOver = false; 
-let hp = 3;
+let HP = 3;
 let playerScore = 0;
 let brokenBricksCounter = 0;
 // Initialize all objects
@@ -25,10 +25,14 @@ function draw() {
 
 function showPlayerStats(score, brokenBricks) {
     const stats = document.getElementById("stats");
-    const scoreDiv = document.getElementById("score");
     console.log(`Your score is ${score} you have broken ${brokenBricks} bricks.`)
 
+    const hpDiv = document.createElement("p");
+    
+    hpDiv.textContent = `Your have ${HP} HP left`;
     stats.textContent = `Your score is ${score}\n you have broken ${brokenBricks} bricks.`;
+
+    stats.append(hpDiv);
 }
 
 function collisionDetection(ball, bricks) {
@@ -102,10 +106,12 @@ function moveCircle() {
                     //console.log("Touched puddle");
                 }
             } else if (ball.y + ball.dy > canvas.height-ball.radius) {
+                if (HP == 0) {
+                    alert(`Game Over. Youre score is ${playerScore}`);
+                    setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
+                }
                 gameOver = true; // Set flag to prevent multiple reloads
-                hp = hp - 1;
-                alert("Game Over");
-                setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
+                HP = HP - 1;
             }
     }
  
