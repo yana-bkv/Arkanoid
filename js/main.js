@@ -4,6 +4,8 @@ import { Puddle, DrawPuddle } from './puddle.js';
 import { DrawBricks, createBricks } from './bricks.js'
 
 let gameOver = false; 
+let playerScore = 0;
+let brokenBricksCounter = 0;
 // Initialize all objects
 const ball = new Ball(350, 412, 5, 1, -1, 'black');
 const puddle = new Puddle(330, 420, 40, 10, "white");
@@ -16,7 +18,8 @@ function draw() {
     DrawPuddle(puddle);
     DrawBricks(bricks);
     collisionDetection(ball, bricks);
-    // collisionDetection(ball,brick);
+
+    console.log(`Your score is ${playerScore} you have broken ${brokenBricksCounter} bricks.`);
 }
 
 function collisionDetection(ball, bricks) {
@@ -30,6 +33,8 @@ function collisionDetection(ball, bricks) {
                 ball.y - ball.radius < brick.y + brick.height // Ball's top edge < brick's bottom edge
             ) {
                 // Collision detected
+                playerScore += 200;
+                brokenBricksCounter += 1;
                 brick.visible = false; // Hide the brick
                 ball.dy = -ball.dy; // Reverse the ball's vertical direction
             }
@@ -42,7 +47,6 @@ function collisionDetection(ball, bricks) {
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
    if (event.code === "Space") {
-       console.log("Space");
        setInterval(() => moveCircle(ball), 1);
    }
    
@@ -55,11 +59,9 @@ document.addEventListener('keydown', function(event) {
 
     // Arrow key movement logic
     if (event.key === "ArrowLeft") {
-        console.log("Left arrow");
         puddle.x = Math.max(0, puddle.x - 17);  // Move left, don't go off-screen
     }
     if (event.key === "ArrowRight") {
-        console.log("Right arrow");
         puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 17);   // Move right, don't go off-screen
     }
 
@@ -88,7 +90,7 @@ function moveCircle() {
             if (ball.x + ball.radius > puddle.x && ball.x - ball.radius < puddle.x + puddle.width) {
                 if (ball.y = ball.y - puddle.height) {
                     ball.dy = -ball.dy;
-                    console.log("Touched puddle");
+                    //console.log("Touched puddle");
                 }
             } else if (ball.y + ball.dy > canvas.height-ball.radius) {
                 gameOver = true; // Set flag to prevent multiple reloads
