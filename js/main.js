@@ -9,9 +9,11 @@ let HP = 3;
 let playerScore = 0;
 let brokenBricksCounter = 0;
  
-// Initialize all objects
+// x,y,radius,dx,dy,color
 const ball = new Ball(350, 412, 5, 2, -2, 'black');
+// x,y, width, height, color
 const puddle = new Puddle(330, 420, 40, 10, "white");
+// x, y, width, height, color, visible=true
 const bricks = createBricks(13, 9, 40, 15, 10, 30, 30, "#611717");
 
 function draw() {

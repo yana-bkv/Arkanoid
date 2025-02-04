@@ -1,4 +1,4 @@
- function Brick(x, y, width, height, color, visible=true,) {
+ function Brick(x, y, width, height, color, visible=true) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -15,7 +15,6 @@
             ctx.closePath();
         }
     }
-
 }
 
 function createBricks(columns, rows, brickWidth, brickHeight, paddingBetween, offsetTop, offsetLeft, color) {
