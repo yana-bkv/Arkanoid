@@ -27,46 +27,6 @@ function draw() {
     drawHUD(HP, playerScore);
 }
 
-// Мяч ударяется о стенки и об доску
-function moveCircle(ball) {
-    if (playerScore == bricks.length) {
-        alert(`You Won!`);
-        setTimeout(() => document.location.reload()); // Reload after 1 sec
-        gameWin = true;
-    }
-    // if (gameOver && gameWin) return; 
-    if (gameOver) {
-        showGameOver(ball);
-    }
-    if (isBallMoving) {
-        if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
-            ball.dx = -ball.dx;
-        }   
-        if ( ball.y + ball.dy < ball.radius) { // Top wall
-            ball.dy = -ball.dy;
-        } else if (ball.y + ball.dy > puddle.y - ball.radius) { // Bottom 
-                if (ball.x + ball.radius > puddle.x && ball.x - ball.radius < puddle.x + puddle.width) {
-                    if (ball.y = ball.y - puddle.height) {
-                        ball.dy = -ball.dy;
-                        //console.log("Touched puddle");
-                    }
-                } else if (ball.y + ball.dy > canvas.height-ball.radius) {
-                    if (HP == 1) {
-                        gameOver = true;
-                    }
-                    HP = HP - 1;
-                    resetBall(ball);
-                }
-        }
-        
-        ball.x += ball.dx;
-        ball.y += ball.dy;  
-    } else if (!isBallMoving) { 
-        ball.x = puddle.x + 20; // таскать мяч за доской пока игра не началась
-    }
-    
-}
-
 function resetBall(ball) {
     ball.x = 350;
     ball.y = 412;
@@ -116,20 +76,14 @@ function showGameWin() {
 }
 
 function restartGame(ball) {
-    const restartButton = document.createElement("button");
+    const restartButton = document.getElementById("restartButton");
 
     restartButton.textContent = "Restart";
-    
-    // Style the button using CSS properties
     restartButton.style.position = 'absolute';
-    restartButton.style.left = `${canvas.offsetLeft + canvas.width/2}px`;
-    restartButton.style.top = `${canvas.offsetTop + canvas.height/2 + 40}px`;
-    restartButton.style.transform = 'translate(-50%, -50%)';
-    restartButton.style.color = 'white';
-    restartButton.style.border = '2px solid white';
-    restartButton.style.font = "30px 'Jersey 15'";
-    restartButton.style.background = 'transparent';
-    restartButton.style.cursor = 'pointer';
+    restartButton.style.display = 'inline';
+
+    restartButton.style.left = `${canvas.offsetLeft + canvas.width/2-50}px`;
+    restartButton.style.top = `${canvas.offsetTop + canvas.height/2 + 60}px`;
 
     // Add click event listener to restart the game
     restartButton.addEventListener('click', () => {
@@ -137,61 +91,28 @@ function restartGame(ball) {
         clearCanvasAndRedraw(ball);
     });
 
-    document.body.appendChild(restartButton);
 }
 
 function continueGame(ball) {
-    const continueButton = document.createElement("button");
+    const continueButton = document.getElementById("continueButton");
 
     continueButton.textContent = "Continue";
-    
-    // Style the button using CSS properties
+    continueButton.style.display = 'inline';
     continueButton.style.position = 'absolute';
-    continueButton.style.left = `${canvas.offsetLeft + canvas.width/2}px`;
-    continueButton.style.top = `${canvas.offsetTop + canvas.height/2 + 80}px`;
-    continueButton.style.transform = 'translate(-50%, -50%)';
-    continueButton.style.color = 'white';
-    continueButton.style.border = '2px solid white';
-    continueButton.style.font = "27px 'Jersey 15'";
-    continueButton.style.background = 'transparent';
-    continueButton.style.cursor = 'pointer';
+
+    continueButton.style.left = `${canvas.offsetLeft + canvas.width/2-50}px`;
+    continueButton.style.top = `${canvas.offsetTop + canvas.height/2 + 20}px`;
 
     // Add click event listener to restart the game
     continueButton.addEventListener('click', () => {
         clearCanvasAndRedraw(ball);
+        continueButton.style.display = 'none';
+        document.getElementById('restartButton').style.display = 'none';
+        ball.dx = 2;
+        ball.dy = -3; 
     });
 
     document.body.appendChild(continueButton);
-}
-
-function collisionDetection(ball, bricks) {
-    bricks.forEach(brick => {
-        if (brick.visible) {
-            // Check if the ball collides with the brick
-            if (
-                ball.x + ball.radius > brick.x && // Ball's right edge > brick's left edge
-                ball.x - ball.radius < brick.x + brick.width && // Ball's left edge < brick's right edge
-                ball.y + ball.radius > brick.y && // Ball's bottom edge > brick's top edge
-                ball.y - ball.radius < brick.y + brick.height // Ball's top edge < brick's bottom edge
-            ) {
-                // Collision detected
-                playerScore += 1;
-                brick.visible = false; // Hide the brick
-                ball.dy = -ball.dy; // Reverse the ball's vertical direction
-            }
-        }
-    });
-}
-
-
-// Function to clear the canvas and redraw the puddle
-function clearCanvasAndRedraw(element) {
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
-
-    element.draw(ctx);  // Redraw puddle at the new position
 }
 
 // KEY HANDLERS
@@ -204,7 +125,6 @@ document.addEventListener('keydown', function(event) {
             ball.dx = 2;
             ball.dy = -3;
         }
-       //setInterval(() => moveCircle(ball), 1);
    }
    
    clearCanvasAndRedraw(ball);  
@@ -236,6 +156,76 @@ document.addEventListener('keydown', function(event) {
 
     clearCanvasAndRedraw(puddle);  
 });
+
+// Мяч ударяется о стенки и об доску
+function moveCircle(ball) {
+    if (playerScore == bricks.length) {
+        alert(`You Won!`);
+        setTimeout(() => document.location.reload()); // Reload after 1 sec
+        gameWin = true;
+    }
+    // if (gameOver && gameWin) return; 
+    if (gameOver) {
+        showGameOver(ball);
+    }
+    if (isBallMoving) {
+        if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
+            ball.dx = -ball.dx;
+        }   
+        if ( ball.y + ball.dy < ball.radius) { // Top wall
+            ball.dy = -ball.dy;
+        } else if (ball.y + ball.dy > puddle.y - ball.radius) { // Bottom 
+                if (ball.x + ball.radius > puddle.x && ball.x - ball.radius < puddle.x + puddle.width) {
+                    if (ball.y = ball.y - puddle.height) {
+                        ball.dy = -ball.dy;
+                        //console.log("Touched puddle");
+                    }
+                } else if (ball.y + ball.dy > canvas.height-ball.radius) {
+                    if (HP == 1) {
+                        gameOver = true;
+                    }
+                    HP = HP - 1;
+                    resetBall(ball);
+                }
+        }
+        
+        ball.x += ball.dx;
+        ball.y += ball.dy;  
+    } else if (!isBallMoving) { 
+        ball.x = puddle.x + 20; // таскать мяч за доской пока игра не началась
+    }
+    
+}
+
+function collisionDetection(ball, bricks) {
+    bricks.forEach(brick => {
+        if (brick.visible) {
+            // Check if the ball collides with the brick
+            if (
+                ball.x + ball.radius > brick.x && // Ball's right edge > brick's left edge
+                ball.x - ball.radius < brick.x + brick.width && // Ball's left edge < brick's right edge
+                ball.y + ball.radius > brick.y && // Ball's bottom edge > brick's top edge
+                ball.y - ball.radius < brick.y + brick.height // Ball's top edge < brick's bottom edge
+            ) {
+                // Collision detected
+                playerScore += 1;
+                brick.visible = false; // Hide the brick
+                ball.dy = -ball.dy; // Reverse the ball's vertical direction
+            }
+        }
+    });
+}
+
+
+// Function to clear the canvas and redraw the puddle
+function clearCanvasAndRedraw(element) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
+
+    element.draw(ctx);  // Redraw puddle at the new position
+}
 
 function loop() {
     draw();

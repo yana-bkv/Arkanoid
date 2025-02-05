@@ -17,10 +17,19 @@ h1 {
     text-align: center;
 }
 
-/* #stats {
+button {
+    transform : 'translate(-50%, -50%)';
+    color : 'white';
+    border : '2px solid white';
     font-family: "Jersey 15", serif;
+    background-color: 'transparent';
+    cursor: 'pointer';
+}
+
+#restartButton {
     font-size: 30px;
-    text-align: center;
-    float: center;
-    padding-top: 20px;
-} */
+}
+
+#continueButton {
+    font-size: 27px;
+}
