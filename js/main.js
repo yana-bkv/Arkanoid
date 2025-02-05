@@ -1,14 +1,13 @@
-import { Field } from './game.js';
+import { Board } from './game.js';
 import { Ball,  DrawBall } from './ball.js';
 import { Puddle, DrawPuddle } from './puddle.js';
 import { DrawBricks, createBricks } from './bricks.js'
 
 let isBallMoving = false;
 let gameOver = false; 
-let gameWon = false;
+let gameWin = false;
 let HP = 3;
 let playerScore = 0;
-let brokenBricksCounter = 0;
  
 // x,y,radius,dx,dy,color
 const ball = new Ball(350, 412, 6, 3, -3, 'white');
@@ -18,24 +17,23 @@ const puddle = new Puddle(330, 420, 40, 10, "white");
 const bricks = createBricks(13, 4, 40, 15, 10, 30, 30);
 
 function draw() {
-    Field();
+    Board();
     DrawBall(ball);
     DrawPuddle(puddle);
     DrawBricks(bricks);
 
     moveCircle(ball);
     collisionDetection(ball, bricks);
-    showPlayerStats(playerScore, brokenBricksCounter);
+    drawHUD(HP, playerScore);
 }
 
-// KEY HANDLERS
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
    if (event.code === "Space") {
         if (!isBallMoving) {
             isBallMoving = true;
-            ball.dx = 1;
+            ball.dx = 2;
             ball.dy = -3;
         }
        //setInterval(() => moveCircle(ball), 1);
@@ -44,23 +42,26 @@ document.addEventListener('keydown', function(event) {
    clearCanvasAndRedraw(ball);  
 });
 
-// Function to clear the canvas and redraw the puddle
-function clearCanvasAndRedraw(element) {
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
-
-    element.draw(ctx);  // Redraw puddle at the new position
-}
+// Add event listener to handle keypresses and move the puddle
+// document.addEventListener('keydown', function(event) {
+//     // Arrow key movement logic
+//    if (event.code === "Escape") {
+//     Board();
+//     ball.dx = 0;
+//     ball.dy = 0;
+//    }
+   
+//    clearCanvasAndRedraw(ball);  
+// });
 
 // Мяч ударяется о стенки и об доску
 function moveCircle(ball) {
-    if (brokenBricksCounter == bricks.length) {
-        gameWin = true;
-    }
-    if (gameOver && gameWin) return; 
-    console.log(bricks.length);
+    // if (playerScore == bricks.length) {
+    //     alert(`You Won!`);
+    //     setTimeout(() => document.location.reload()); // Reload after 1 sec
+    //     gameWin = true;
+    // }
+    // if (gameOver && gameWin) return; 
     if (isBallMoving) {
         if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
             ball.dx = -ball.dx;
@@ -86,8 +87,8 @@ function moveCircle(ball) {
         
         ball.x += ball.dx;
         ball.y += ball.dy;  
-    } else if (!isBallMoving) {
-        ball.x = puddle.x + 20;
+    } else if (!isBallMoving) { 
+        ball.x = puddle.x + 20; // таскать мяч за доской пока игра не началась
     }
     
 }
@@ -100,16 +101,26 @@ function resetBall(ball) {
     isBallMoving = false;
 }
 
-function showPlayerStats(score, brokenBricks) {
-    const hpDiv = document.getElementById("hp");
-    const scoreDiv = document.getElementById("score");
-    const brokenBricksDiv = document.getElementById("bricks");
+function drawHUD(hp, score) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    // Save current context state
     
-    hpDiv.textContent = `Your have ${HP} HP left`;
-    scoreDiv.textContent = `Your score is ${score}`;
-    brokenBricksDiv.textContent = `You have broken ${brokenBricks} bricks`;
+    // Set text styles
+    ctx.fillStyle = 'white';
+    ctx.font = "25px 'Jersey 15'";
+    
+    // Draw HP (left side)
+    ctx.textAlign = 'left';
+    ctx.fillText(`HP: ${hp}`, 20, canvas.height - 20);
+    
+    // Draw Score (right side)
+    ctx.textAlign = 'right';
+    ctx.fillText(`Score: ${score}`, canvas.width - 20, canvas.height - 20);
+    
+    // Restore context state
+    ctx.restore();
 }
-
 
 function collisionDetection(ball, bricks) {
     bricks.forEach(brick => {
@@ -122,8 +133,7 @@ function collisionDetection(ball, bricks) {
                 ball.y - ball.radius < brick.y + brick.height // Ball's top edge < brick's bottom edge
             ) {
                 // Collision detected
-                playerScore += 200;
-                brokenBricksCounter += 1;
+                playerScore += 1;
                 brick.visible = false; // Hide the brick
                 ball.dy = -ball.dy; // Reverse the ball's vertical direction
             }
@@ -131,6 +141,18 @@ function collisionDetection(ball, bricks) {
     });
 }
 
+
+// Function to clear the canvas and redraw the puddle
+function clearCanvasAndRedraw(element) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
+
+    element.draw(ctx);  // Redraw puddle at the new position
+}
+
+// KEY HANDLERS
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     const canvas = document.getElementById("canvas");
