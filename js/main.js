@@ -6,7 +6,7 @@ import { DrawBricks, createBricks } from './bricks.js'
 let isBallMoving = false;
 let gameOver = false; 
 let gameWin = false;
-let HP = 3;
+let HP = 1;
 let playerScore = 0;
  
 // x,y,radius,dx,dy,color
@@ -27,41 +27,17 @@ function draw() {
     drawHUD(HP, playerScore);
 }
 
-// Add event listener to handle keypresses and move the puddle
-document.addEventListener('keydown', function(event) {
-    // Arrow key movement logic
-   if (event.code === "Space") {
-        if (!isBallMoving) {
-            isBallMoving = true;
-            ball.dx = 2;
-            ball.dy = -3;
-        }
-       //setInterval(() => moveCircle(ball), 1);
-   }
-   
-   clearCanvasAndRedraw(ball);  
-});
-
-// Add event listener to handle keypresses and move the puddle
-// document.addEventListener('keydown', function(event) {
-//     // Arrow key movement logic
-//    if (event.code === "Escape") {
-//     Board();
-//     ball.dx = 0;
-//     ball.dy = 0;
-//    }
-   
-//    clearCanvasAndRedraw(ball);  
-// });
-
 // Мяч ударяется о стенки и об доску
 function moveCircle(ball) {
-    // if (playerScore == bricks.length) {
-    //     alert(`You Won!`);
-    //     setTimeout(() => document.location.reload()); // Reload after 1 sec
-    //     gameWin = true;
-    // }
+    if (playerScore == bricks.length) {
+        alert(`You Won!`);
+        setTimeout(() => document.location.reload()); // Reload after 1 sec
+        gameWin = true;
+    }
     // if (gameOver && gameWin) return; 
+    if (gameOver) {
+        showGameOver(ball);
+    }
     if (isBallMoving) {
         if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
             ball.dx = -ball.dx;
@@ -76,8 +52,6 @@ function moveCircle(ball) {
                     }
                 } else if (ball.y + ball.dy > canvas.height-ball.radius) {
                     if (HP == 1) {
-                        alert(`Game Over. Your score is ${playerScore}`);
-                        setTimeout(() => document.location.reload(), 1000); // Reload after 1 sec
                         gameOver = true;
                     }
                     HP = HP - 1;
@@ -122,6 +96,74 @@ function drawHUD(hp, score) {
     ctx.restore();
 }
 
+function showGameOver(ball) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'white';
+    ctx.font = "50px 'Jersey 15'";
+
+    ctx.textAlign = 'center';
+    ctx.fillText('Game Over ', canvas.width/2, canvas.height/2);
+
+    ball.dx = 0;
+    ball.dy = 0;
+    restartGame(ball);
+}
+
+function showGameWin() {
+    restartGame(ball);
+}
+
+function restartGame(ball) {
+    const restartButton = document.createElement("button");
+
+    restartButton.textContent = "Restart";
+    
+    // Style the button using CSS properties
+    restartButton.style.position = 'absolute';
+    restartButton.style.left = `${canvas.offsetLeft + canvas.width/2}px`;
+    restartButton.style.top = `${canvas.offsetTop + canvas.height/2 + 40}px`;
+    restartButton.style.transform = 'translate(-50%, -50%)';
+    restartButton.style.color = 'white';
+    restartButton.style.border = '2px solid white';
+    restartButton.style.font = "30px 'Jersey 15'";
+    restartButton.style.background = 'transparent';
+    restartButton.style.cursor = 'pointer';
+
+    // Add click event listener to restart the game
+    restartButton.addEventListener('click', () => {
+        setTimeout(() => document.location.reload(), 1000);
+        clearCanvasAndRedraw(ball);
+    });
+
+    document.body.appendChild(restartButton);
+}
+
+function continueGame(ball) {
+    const continueButton = document.createElement("button");
+
+    continueButton.textContent = "Continue";
+    
+    // Style the button using CSS properties
+    continueButton.style.position = 'absolute';
+    continueButton.style.left = `${canvas.offsetLeft + canvas.width/2}px`;
+    continueButton.style.top = `${canvas.offsetTop + canvas.height/2 + 80}px`;
+    continueButton.style.transform = 'translate(-50%, -50%)';
+    continueButton.style.color = 'white';
+    continueButton.style.border = '2px solid white';
+    continueButton.style.font = "27px 'Jersey 15'";
+    continueButton.style.background = 'transparent';
+    continueButton.style.cursor = 'pointer';
+
+    // Add click event listener to restart the game
+    continueButton.addEventListener('click', () => {
+        clearCanvasAndRedraw(ball);
+    });
+
+    document.body.appendChild(continueButton);
+}
+
 function collisionDetection(ball, bricks) {
     bricks.forEach(brick => {
         if (brick.visible) {
@@ -153,6 +195,33 @@ function clearCanvasAndRedraw(element) {
 }
 
 // KEY HANDLERS
+// Add event listener to handle keypresses and move the puddle
+document.addEventListener('keydown', function(event) {
+    // Arrow key movement logic
+   if (event.code === "Space") {
+        if (!isBallMoving) {
+            isBallMoving = true;
+            ball.dx = 2;
+            ball.dy = -3;
+        }
+       //setInterval(() => moveCircle(ball), 1);
+   }
+   
+   clearCanvasAndRedraw(ball);  
+});
+
+// Add event listener to handle keypresses and move the puddle
+document.addEventListener('keydown', function(event) {
+    // Arrow key movement logic
+   if (event.code === "Escape") {
+    showGameOver(ball);
+    restartGame(ball);
+    continueGame(ball);
+   }
+   
+   clearCanvasAndRedraw(ball);  
+});
+
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     const canvas = document.getElementById("canvas");
