@@ -10,7 +10,7 @@ let HP = 2;
 let playerScore = 0;
  
 // x,y,radius,dx,dy,color
-const ball = new Ball(350, 412, 6, 3, -3, 'white');
+const ball = new Ball(350, 412, 6, 0, 0, 'white');
 // x,y, width, height, color
 const puddle = new Puddle(330, 420, 40, 10, "white");
 // columns, rows, brickWidth, brickHeight, paddingBetween, offsetTop, offsetLeft, color
@@ -24,37 +24,39 @@ function draw() {
 
     moveCircle(ball);
     collisionDetection(ball, bricks);
-    DrawHUD(HP, playerScore);
-}
-
-// Put ball to initial position
-function resetBall(ball) {
-    ball.x = 350;
-    ball.y = 412;
-    ball.dx = 0;
-    ball.dy = 0;
-    isBallMoving = false;
+    DrawHUD(HP, playerScore,fps);
 }
 
 // KEY HANDLERS
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
-   if (event.code === "Space") {
-        if (!isBallMoving) {
-            isBallMoving = true;
-            ball.dx = 2;
-            ball.dy = -3;
-        }
+   if (event.code === "Escape") {
+    let tempDx, tempDy;
+    tempDx = ball.dx;
+    tempDy = ball.dy;
+    if (isBallMoving) {
+        StopGame(ball);
+    } else {
+        document.getElementById('continueButton').style.display = 'none';
+        document.getElementById('restartButton').style.display = 'none';
+        ball.dx = tempDx;
+        ball.dy = tempDy; 
+    }
    }
    
 });
-
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
-   if (event.code === "Escape") {
-    StopGame(ball);
+   if (event.code === "Space") {
+        if (!isBallMoving) {
+            isBallMoving = true;
+            const index = Math.floor(Math.random() * 6); // 0-5
+            const randomIntX = index < 3 ? index - 3 : index - 2;
+            ball.dx = randomIntX;
+            ball.dy = -3;
+        }
    }
    
 });
@@ -71,6 +73,15 @@ document.addEventListener('keydown', function(event) {
         puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 15);   // Move right, don't go off-screen
     }
 });
+
+// Put ball to initial position
+function resetBall(ball) {
+    ball.x = 350;
+    ball.y = 412;
+    ball.dx = 0;
+    ball.dy = 0;
+    isBallMoving = false;
+}
 
 // Мяч ударяется о стенки и об доску
 function moveCircle(ball) {
@@ -128,9 +139,21 @@ function collisionDetection(ball, bricks) {
     });
 }
 
+var times = [];
+var fps;
+
 function loop() {
-    draw();
-    window.requestAnimationFrame(loop);
+  draw();
+  window.requestAnimationFrame(function() {
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps = times.length;
+    loop();
+  });
 }
+
 
 loop();

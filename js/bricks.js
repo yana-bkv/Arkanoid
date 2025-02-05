@@ -11,6 +11,11 @@
             ctx.beginPath();
             ctx.rect(this.x,this.y,this.width,this.height);
             ctx.fillStyle = this.color;
+
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+
             ctx.fill();
             ctx.closePath();
         }
@@ -22,7 +27,7 @@ function createBricks(columns, rows, brickWidth, brickHeight, paddingBetween, of
 
     for (let c = 0; c < columns; c++) {
         for (let r = 0; r < rows; r++) {
-            let brickColor = "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
+            let brickColor = "#" + ((12 << 18) * Math.random() | 0).toString(16).padStart(6, "0");
             const x = c * (brickWidth + paddingBetween) + offsetLeft;
             const y = r * (brickHeight + paddingBetween) + offsetTop;
             bricks.push(new Brick(x, y, brickWidth, brickHeight, brickColor));

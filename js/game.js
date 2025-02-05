@@ -1,5 +1,6 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+let tempDx, tempDy;
 
 function Board() {
     canvas.width = 700;
@@ -10,18 +11,18 @@ function Board() {
 }
 
 // Show players stats 
-function DrawHUD(hp, score) {
+function DrawHUD(hp, score,fps) {
     // Set text styles
     ctx.fillStyle = 'white';
     ctx.font = "25px 'Jersey 15'";
     
     // Draw HP (left side)
     ctx.textAlign = 'left';
-    ctx.fillText(`HP: ${hp}`, 20, canvas.height - 20);
+    ctx.fillText(`HP: ${hp}    Score: ${score}`, 20, canvas.height - 20);
     
     // Draw Score (right side)
     ctx.textAlign = 'right';
-    ctx.fillText(`Score: ${score}`, canvas.width - 20, canvas.height - 20);
+    ctx.fillText(`Fps: ${fps}`, canvas.width - 20, canvas.height - 20);
 }
 
 function ShowGameOver(ball) {
@@ -66,7 +67,7 @@ function restartGame(ball) {
 
 }
 
-function continueGame(ball) {
+function ContinueGame(ball) {
     const continueButton = document.getElementById("continueButton");
 
     continueButton.textContent = "Continue";
@@ -78,11 +79,10 @@ function continueGame(ball) {
 
     // Add click event listener to restart the game
     continueButton.addEventListener('click', () => {
-        clearCanvasAndRedraw(ball);
         continueButton.style.display = 'none';
         document.getElementById('restartButton').style.display = 'none';
-        ball.dx = 2;
-        ball.dy = -3; 
+        ball.dx = tempDx;
+        ball.dy = tempDy; 
         clearCanvasAndRedraw(ball);
     });
 
@@ -91,10 +91,12 @@ function continueGame(ball) {
 
 
 function StopGame(ball) {
+    tempDx = ball.dx;
+    tempDy = ball.dy;
     ball.dx = 0;
     ball.dy = 0;
     restartGame(ball);
-    continueGame(ball);
+    ContinueGame(ball);
 }
 
 // Function to clear the canvas and redraw the puddle
@@ -104,8 +106,7 @@ function clearCanvasAndRedraw(element) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
 
-    element.draw(ctx);  // Redraw puddle at the new position
+    element.draw(ctx);
 }
-
 
 export {Board, DrawHUD, ShowGameOver, ShowGameWin, StopGame};
