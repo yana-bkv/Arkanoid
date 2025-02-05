@@ -1,11 +1,11 @@
-import { Board } from './game.js';
+import { Board, DrawHUD, ShowGameOver, ShowGameWin, StopGame } from './game.js';
 import { Ball,  DrawBall } from './ball.js';
 import { Puddle, DrawPuddle } from './puddle.js';
 import { DrawBricks, createBricks } from './bricks.js'
 
+// Stats
 let isBallMoving = false;
 let gameOver = false; 
-let gameWin = false;
 let HP = 1;
 let playerScore = 0;
  
@@ -24,95 +24,16 @@ function draw() {
 
     moveCircle(ball);
     collisionDetection(ball, bricks);
-    drawHUD(HP, playerScore);
+    DrawHUD(HP, playerScore);
 }
 
+// Put ball to initial position
 function resetBall(ball) {
     ball.x = 350;
     ball.y = 412;
     ball.dx = 0;
     ball.dy = 0;
     isBallMoving = false;
-}
-
-function drawHUD(hp, score) {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    // Save current context state
-    
-    // Set text styles
-    ctx.fillStyle = 'white';
-    ctx.font = "25px 'Jersey 15'";
-    
-    // Draw HP (left side)
-    ctx.textAlign = 'left';
-    ctx.fillText(`HP: ${hp}`, 20, canvas.height - 20);
-    
-    // Draw Score (right side)
-    ctx.textAlign = 'right';
-    ctx.fillText(`Score: ${score}`, canvas.width - 20, canvas.height - 20);
-    
-    // Restore context state
-    ctx.restore();
-}
-
-function showGameOver(ball) {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = 'white';
-    ctx.font = "50px 'Jersey 15'";
-
-    ctx.textAlign = 'center';
-    ctx.fillText('Game Over ', canvas.width/2, canvas.height/2);
-
-    ball.dx = 0;
-    ball.dy = 0;
-    restartGame(ball);
-}
-
-function showGameWin() {
-    restartGame(ball);
-}
-
-function restartGame(ball) {
-    const restartButton = document.getElementById("restartButton");
-
-    restartButton.textContent = "Restart";
-    restartButton.style.position = 'absolute';
-    restartButton.style.display = 'inline';
-
-    restartButton.style.left = `${canvas.offsetLeft + canvas.width/2-50}px`;
-    restartButton.style.top = `${canvas.offsetTop + canvas.height/2 + 60}px`;
-
-    // Add click event listener to restart the game
-    restartButton.addEventListener('click', () => {
-        setTimeout(() => document.location.reload(), 1000);
-        clearCanvasAndRedraw(ball);
-    });
-
-}
-
-function continueGame(ball) {
-    const continueButton = document.getElementById("continueButton");
-
-    continueButton.textContent = "Continue";
-    continueButton.style.display = 'inline';
-    continueButton.style.position = 'absolute';
-
-    continueButton.style.left = `${canvas.offsetLeft + canvas.width/2-50}px`;
-    continueButton.style.top = `${canvas.offsetTop + canvas.height/2 + 20}px`;
-
-    // Add click event listener to restart the game
-    continueButton.addEventListener('click', () => {
-        clearCanvasAndRedraw(ball);
-        continueButton.style.display = 'none';
-        document.getElementById('restartButton').style.display = 'none';
-        ball.dx = 2;
-        ball.dy = -3; 
-    });
-
-    document.body.appendChild(continueButton);
 }
 
 // KEY HANDLERS
@@ -134,9 +55,7 @@ document.addEventListener('keydown', function(event) {
 document.addEventListener('keydown', function(event) {
     // Arrow key movement logic
    if (event.code === "Escape") {
-    showGameOver(ball);
-    restartGame(ball);
-    continueGame(ball);
+    StopGame(ball);
    }
    
    clearCanvasAndRedraw(ball);  
@@ -160,13 +79,10 @@ document.addEventListener('keydown', function(event) {
 // Мяч ударяется о стенки и об доску
 function moveCircle(ball) {
     if (playerScore == bricks.length) {
-        alert(`You Won!`);
-        setTimeout(() => document.location.reload()); // Reload after 1 sec
-        gameWin = true;
+        ShowGameWin(ball);
     }
-    // if (gameOver && gameWin) return; 
     if (gameOver) {
-        showGameOver(ball);
+        ShowGameOver(ball);
     }
     if (isBallMoving) {
         if (ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) { // Left andt right walls
@@ -188,7 +104,7 @@ function moveCircle(ball) {
                     resetBall(ball);
                 }
         }
-        
+
         ball.x += ball.dx;
         ball.y += ball.dy;  
     } else if (!isBallMoving) { 
