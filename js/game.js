@@ -82,7 +82,7 @@ function ContinueGame(ball) {
         continueButton.style.display = 'none';
         document.getElementById('restartButton').style.display = 'none';
         ball.dx = tempDx;
-        ball.dy = tempDy; 
+        ball.dy = tempDy ; 
         clearCanvasAndRedraw(ball);
     });
 
