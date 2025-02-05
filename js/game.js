@@ -97,5 +97,15 @@ function StopGame(ball) {
     continueGame(ball);
 }
 
+// Function to clear the canvas and redraw the puddle
+function clearCanvasAndRedraw(element) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
+
+    element.draw(ctx);  // Redraw puddle at the new position
+}
+
 
 export {Board, DrawHUD, ShowGameOver, ShowGameWin, StopGame};

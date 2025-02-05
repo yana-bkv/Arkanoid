@@ -6,7 +6,7 @@ import { DrawBricks, createBricks } from './bricks.js'
 // Stats
 let isBallMoving = false;
 let gameOver = false; 
-let HP = 1;
+let HP = 2;
 let playerScore = 0;
  
 // x,y,radius,dx,dy,color
@@ -48,7 +48,6 @@ document.addEventListener('keydown', function(event) {
         }
    }
    
-   clearCanvasAndRedraw(ball);  
 });
 
 // Add event listener to handle keypresses and move the puddle
@@ -58,7 +57,6 @@ document.addEventListener('keydown', function(event) {
     StopGame(ball);
    }
    
-   clearCanvasAndRedraw(ball);  
 });
 
 // Add event listener to handle keypresses and move the puddle
@@ -72,8 +70,6 @@ document.addEventListener('keydown', function(event) {
     if (event.key === "ArrowRight") {
         puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 15);   // Move right, don't go off-screen
     }
-
-    clearCanvasAndRedraw(puddle);  
 });
 
 // Мяч ударяется о стенки и об доску
@@ -130,17 +126,6 @@ function collisionDetection(ball, bricks) {
             }
         }
     });
-}
-
-
-// Function to clear the canvas and redraw the puddle
-function clearCanvasAndRedraw(element) {
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
-
-    element.draw(ctx);  // Redraw puddle at the new position
 }
 
 function loop() {
