@@ -9,10 +9,6 @@ let gameOver = false;
 let HP = 2;
 let playerScore = 0;
 let escapeHeld = false;
-
-let hasStarted = false;
-let timerInterval; 
-let startTime;
  
 // x,y,radius,dx,dy,color
 const ball = new Ball(350, 412, 6, 0, 0, 'white');
@@ -30,29 +26,6 @@ function draw() {
     moveCircle(ball);
     collisionDetection(ball, bricks);
     DrawHUD(HP, playerScore,fps);
-    if (!hasStarted) {
-        startTime = Date.now();
-        hasStarted = true;
-        startTimer();
-      }
-}
-
-function startTimer() {
-    timerInterval = setInterval(() => { 
-        const currentTime = Date.now();
-        const elapsedMilliseconds = currentTime - startTime;
-    
-        // Convert milliseconds to minutes and seconds
-        const totalSeconds = Math.floor(elapsedMilliseconds / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        console.log(minutes,seconds);
-    },1000); 
-}
-
-function stopTimer() {
-    clearInterval(timerInterval);
-    hasStarted = false;
 }
 
 // KEY HANDLERS
@@ -85,9 +58,6 @@ document.addEventListener('keydown', function(event) {
     tempDx = ball.dx;
     tempDy = ball.dy;
     StopGame(ball,tempDx,tempDy);
-    stopTimer();
-
-    escapeHeld = true;
    }
    
 });
@@ -141,7 +111,6 @@ function moveCircle(ball) {
     } else if (!isBallMoving) { 
         ball.x = puddle.x + 20; // таскать мяч за доской пока игра не началась
     }
-    
 }
 
 function collisionDetection(ball, bricks) {
@@ -178,6 +147,5 @@ function loop() {
     loop();
   });
 }
-
 
 loop();
