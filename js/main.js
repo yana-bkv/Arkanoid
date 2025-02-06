@@ -8,6 +8,10 @@ let isBallMoving = false;
 let gameOver = false; 
 let HP = 2;
 let playerScore = 0;
+
+let hasStarted = false;
+let timerInterval; 
+let startTime;
  
 // x,y,radius,dx,dy,color
 const ball = new Ball(350, 412, 6, 0, 0, 'white');
@@ -25,42 +29,32 @@ function draw() {
     moveCircle(ball);
     collisionDetection(ball, bricks);
     DrawHUD(HP, playerScore,fps);
+    if (!hasStarted) {
+        startTime = Date.now();
+        hasStarted = true;
+        startTimer();
+      }
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => { 
+        const currentTime = Date.now();
+        const elapsedMilliseconds = currentTime - startTime;
+    
+        // Convert milliseconds to minutes and seconds
+        const totalSeconds = Math.floor(elapsedMilliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        console.log(minutes,seconds);
+    },1000); 
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    hasStarted = false;
 }
 
 // KEY HANDLERS
-// Add event listener to handle keypresses and move the puddle
-document.addEventListener('keydown', function(event) {
-    // Arrow key movement logic
-   if (event.code === "Escape") {
-    let tempDx, tempDy;
-    tempDx = ball.dx;
-    tempDy = ball.dy;
-    if (isBallMoving) {
-        StopGame(ball);
-    } else {
-        document.getElementById('continueButton').style.display = 'none';
-        document.getElementById('restartButton').style.display = 'none';
-        ball.dx = tempDx;
-        ball.dy = tempDy; 
-    }
-   }
-   
-});
-// Add event listener to handle keypresses and move the puddle
-document.addEventListener('keydown', function(event) {
-    // Arrow key movement logic
-   if (event.code === "Space") {
-        if (!isBallMoving) {
-            isBallMoving = true;
-            const index = Math.floor(Math.random() * 6); // 0-5
-            const randomIntX = index < 3 ? index - 3 : index - 2;
-            ball.dx = randomIntX;
-            ball.dy = -3;
-        }
-   }
-   
-});
-
 // Add event listener to handle keypresses and move the puddle
 document.addEventListener('keydown', function(event) {
     const canvas = document.getElementById("canvas");
@@ -72,6 +66,25 @@ document.addEventListener('keydown', function(event) {
     if (event.key === "ArrowRight") {
         puddle.x = Math.min(canvas.width - puddle.width, puddle.x + 15);   // Move right, don't go off-screen
     }
+
+    if (event.code === "Space") {
+        if (!isBallMoving) {
+            isBallMoving = true;
+            const index = Math.floor(Math.random() * 6); // 0-5
+            const randomIntX = index < 3 ? index - 3 : index - 2;
+            ball.dx = randomIntX;
+            ball.dy = -3;
+        }
+   }
+
+   if (event.code === "Escape") {
+    let tempDx, tempDy;
+    tempDx = ball.dx;
+    tempDy = ball.dy;
+    StopGame(ball,tempDx,tempDy);
+    stopTimer();
+   }
+   
 });
 
 // Put ball to initial position

@@ -1,6 +1,5 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-let tempDx, tempDy;
 
 function Board() {
     canvas.width = 700;
@@ -67,7 +66,7 @@ function restartGame(ball) {
 
 }
 
-function ContinueGame(ball) {
+function ContinueGame(ball,tempDx,tempDy) {
     const continueButton = document.getElementById("continueButton");
 
     continueButton.textContent = "Continue";
@@ -90,13 +89,11 @@ function ContinueGame(ball) {
 }
 
 
-function StopGame(ball) {
-    tempDx = ball.dx;
-    tempDy = ball.dy;
+function StopGame(ball,tempDx,tempDy) {
     ball.dx = 0;
     ball.dy = 0;
     restartGame(ball);
-    ContinueGame(ball);
+    ContinueGame(ball,tempDx,tempDy);
 }
 
 // Function to clear the canvas and redraw the puddle
