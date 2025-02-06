@@ -8,6 +8,7 @@ let isBallMoving = false;
 let gameOver = false; 
 let HP = 2;
 let playerScore = 0;
+let escapeHeld = false;
 
 let hasStarted = false;
 let timerInterval; 
@@ -69,22 +70,32 @@ document.addEventListener('keydown', function(event) {
 
     if (event.code === "Space") {
         if (!isBallMoving) {
+            // Shoots ball in random direction (x)
             isBallMoving = true;
             const index = Math.floor(Math.random() * 6); // 0-5
             const randomIntX = index < 3 ? index - 3 : index - 2;
             ball.dx = randomIntX;
             ball.dy = -3;
+ 
         }
    }
 
-   if (event.code === "Escape") {
+   if (event.code === "Escape" && !escapeHeld) {
     let tempDx, tempDy;
     tempDx = ball.dx;
     tempDy = ball.dy;
     StopGame(ball,tempDx,tempDy);
     stopTimer();
+
+    escapeHeld = true;
    }
    
+});
+
+document.addEventListener('keyup', function(e) {
+    if (e.code === "Escape") {
+        escapeHeld = false;
+    }
 });
 
 // Put ball to initial position
