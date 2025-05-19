@@ -32,18 +32,10 @@ The **score** and **HP (lives left)** are displayed on the left side of the scre
 
 ---
 
-## 🚧 To Do
-
-- [ ] Fix: Ball sometimes bounces even when missing the paddle
-- [ ] Add better edge-case collision handling
-
----
-
 ## 🧠 Resources Used
 
 - [Canvas Arkanoid Game Tutorial](https://blog.thejaytray.com/canvas-basics-arkanoid-game-tutorial/) — base inspiration
 - [MDN Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) — official Canvas docs
-- ChatGPT — logic help, refactoring, and debugging support
 
 ---
 
