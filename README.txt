@@ -1,34 +1,74 @@
+# Arkanoid Game (Pure JavaScript)
 
-Start game = press space
-Stop game = press enter
-Move puddle with arrow keys 
-Restart game = press escape
+A simple Arkanoid clone built with **vanilla JavaScript** and the **Canvas API**. Control the paddle, bounce the ball, break the logic — and test your reflexes.
 
-On the left is score and hp (left lifes of a player)
+---
 
-resources used :
+## 🎮 Controls
+```
+Start Game     = Press Space
+Pause/Resume   = Press Enter
+Move Paddle    = Arrow Keys (←, →)
+Restart Game   = Press Escape
+```
 
-https://blog.thejaytray.com/canvas-basics-arkanoid-game-tutorial/ -- main source
+The **score** and **HP (lives left)** are displayed on the left side of the screen.
 
-https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API -- canvas creating
+---
 
-ChatGPT
+## ✅ Features
 
+- Canvas-based game board rendering
+- Paddle movement with arrow keys
+- Ball physics (bounce off paddle and walls)
+- Game over when the ball misses the paddle
+- Pause/resume functionality
+- Win and lose game screens
+- Score and HP tracking
+- Timer:
+  - Starts when the game begins
+  - Pauses when the game is paused
+  - Game is lost if time exceeds 5 minutes
 
+---
 
-сделано движение доски, нарисован весь канвас,
-механика мяча - отскакивает от стен и доски, 
-при пролетании мимо доски игра окончен
-возможность поставить на паузу и начать сначала
-экраны проигрыша и выйграша
-отображение хп и счета
+## 🚧 To Do
 
+- [ ] Fix: Ball sometimes bounces even when missing the paddle
+- [ ] Add better edge-case collision handling
 
-пофиксить баг где мяч отскакивает пролетая рядом с доской
-мне осталось добавить проведенное время в игре
-когда начинаешь игру время отсчитывается, при паузе ставит на паузу
-если время больше 5 минут, то игра проиграна
+---
 
+## 🧠 Resources Used
 
-Problems that i still have and have difficulty to solve
-Help is welcome
+- [Canvas Arkanoid Game Tutorial](https://blog.thejaytray.com/canvas-basics-arkanoid-game-tutorial/) — base inspiration
+- [MDN Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) — official Canvas docs
+- ChatGPT — logic help, refactoring, and debugging support
+
+---
+
+## 🚀 How to Run
+
+Open `index.html` in your browser. No dependencies, no build tools.
+
+---
+
+## 📁 Project Structure
+```
+arkanoid-game/
+├── index.html         # Main HTML file
+├── styles.css         # Game styling
+├── game.js            # Main game logic
+├── assets/            # Images, sounds (if any)
+└── README.md
+```
+
+## 📌 About the Project
+
+This project was made as a learning exercise to understand real-time rendering, game loops, keyboard input, and basic game logic using pure JavaScript.
+
+It's simple by design, but easy to extend: you can add levels, bricks, sound effects, or a scoreboard in the future.
+
+---
+
+Made with code and curiosity.
