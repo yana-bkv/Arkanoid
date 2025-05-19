@@ -1,4 +1,6 @@
-# Arkanoid Game (Pure JavaScript)
+# Arkanoid Game (Pure JavaScript) 
+#  Forum & Messenger App
+
 
 A simple Arkanoid clone built with **vanilla JavaScript** and the **Canvas API**. Control the paddle, bounce the ball, break the logic — and test your reflexes.
 
